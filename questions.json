@@ -1,0 +1,55 @@
+[
+    {
+        "question": "A band of homeless beggers asks if they can come in.",
+        "yes": "+10 population, -5 happiness",
+        "no": "If the beggers haven't gone to another player yet, beggers go to next player, otherwise nothing happens."
+    },
+
+    {
+        "question": "One of your citizens asks if they can build a circus.",
+        "yes": "+5 population from each player, +10 happiness, -5 money, -5 resources.",
+        "no": "-10 happiness"
+    },
+
+    {
+        "question": "A person thinks you should raise taxes.",
+        "yes": "+10 money, -10 happiness",
+        "no": "+5 happiness"
+    },
+
+    {
+        "question": "A group of lumberjacks asks if they can cut down some of your forests.",
+        "yes": "+15 money, -10 resources",
+        "no": "-5 happiness"
+    },
+
+    {
+        "question": "A CEO asks you to invest in his company.",
+        "yes": "+15 money",
+        "no": "-5 happiness"
+    },
+
+    {
+        "question": "A CEO asks you to invest in his company.",
+        "yes": "-15 money",
+        "no": "-5 happiness"
+    },
+
+    {
+        "question": "A doctor wants you to make all drugs illegal.",
+        "yes": "-10 happiness",
+        "no": "-10 population, +5 happiness"
+    },
+
+    {
+        "question": "A mysterious soothsayer tells you that a monster will attack, and that you should build a wall.",
+        "yes": "+15 happiness, -10 resources, -5 money",
+        "no": "-15 population, -10 happiness"
+    },
+
+    {
+        "question": "A builder thinks that you should build more houses.",
+        "yes": "-10 resources, -5 money, +5 population from each player",
+        "no": "-5 happiness"
+    }
+]
