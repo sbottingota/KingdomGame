@@ -1,6 +1,7 @@
 import random
 import json
-
+import matplotlib
+import matplotlib.pyplot as plt
 
 def getBinaryInput():
     binaryInput = input("y(es) or n(o): ")
@@ -50,14 +51,29 @@ def getRandomQuestionSet():
     with open("questions.json", "r") as questions:
         return random.choice(json.load(questions))
 
+def updateBarChart(players):
+    plt.cla()
+    figure, axis = plt.subplots(len(players), 1)
+    #plt.ylim(top=100)
+    plt.ylim(bottom=100)
+    for player in players:
+        player.updateBarChart(axis[players.index(player)])
+    plt.ion()
+    plt.pause(0.01)
 
 def play(players):
+    matplotlib.use("TkAgg")
+
     questionSet = prevQuestionSet = {"question": None}
     needsToRepeatQuestion = False
 
     playerIndex = 0
 
+    updateBarChart(players)
+    plt.show(block=False)
+
     while True:
+
         # current player
         currentPlayer = players[playerIndex]
 
@@ -97,3 +113,7 @@ def play(players):
         playerIndex += 1
         if playerIndex == len(players):
             playerIndex = 0
+
+        #graph
+        updateBarChart(players)
+
