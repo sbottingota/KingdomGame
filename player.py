@@ -3,6 +3,7 @@ class Player:
         self.name = name
 
         self.isDead = False
+        self.hasWon = False
 
         self.stats = {
             "money": 50,
@@ -16,6 +17,8 @@ class Player:
         self.stats[stat] += addValue
         if self.stats[stat] > 100:
             self.stats[stat] = 100
+            self.hasWon = True
 
         elif self.stats[stat] <= 0:
+            self.stats[stat] = 0
             self.isDead = True
