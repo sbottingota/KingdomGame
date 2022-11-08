@@ -30,14 +30,16 @@ class Player:
             self.stats[stat] = 100
             self.hasWon = True
 
-        elif self.stats[stat] <= 0:
+        elif self.stats[stat] <=0:
             self.stats[stat] = 0
             self.isDead = True
 
-    def updateBarChart(self, barChartSection):
-        barChartSection.clear()
-        for bar in barChartSection:
-            bar.set_height(["money", "resources", "population", "happiness"],
-                                [self.stats["money"], self.stats["resources"], self.stats["population"], self.stats["happiness"]],
-                                color=self.color)
-        barChartSection.set_title(self.name)
+    def updateBarChart(self):
+        for stat in self.stats:
+            plt.bar([stat],
+                [self.stats[stat]],
+                color=self.color)
+
+        #for bar in bars:
+
+        #    print(bar.get_height())

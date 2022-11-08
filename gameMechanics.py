@@ -26,12 +26,14 @@ def getBinaryInput():
 # returns if the question needs to be presented to the next person
 def parseAnswerConsequences(actions, currentPlayer, players):
     if actions == "n":
+        print("next player")
         return True
 
     for stat in actions:
         # take from each player
         if actions[stat][0] == "p":
             addValue = int(actions[stat][1:])
+            print("take", addValue)
 
             currentPlayer.addToStat(len(players) * addValue, stat)
 
@@ -43,6 +45,7 @@ def parseAnswerConsequences(actions, currentPlayer, players):
         # add or subtract
         else:
             currentPlayer.addToStat(int(actions[stat]), stat)
+            print("add", actions[stat])
 
     return False
 
@@ -53,16 +56,16 @@ def getRandomQuestionSet():
 
 def updateBarChart(players):
     plt.cla()
-    figure, axis = plt.subplots(len(players), 1)
-    #plt.ylim(top=100)
-    plt.ylim(bottom=100)
     for player in players:
-        player.updateBarChart(axis[players.index(player)])
+        plt.subplot(1, len(players), players.index(player) + 1)
+        player.updateBarChart()
+        plt.draw()
+
     plt.ion()
     plt.pause(0.01)
 
 def play(players):
-    matplotlib.use("TkAgg")
+    #matplotlib.use("TkAgg")
 
     questionSet = prevQuestionSet = {"question": None}
     needsToRepeatQuestion = False
@@ -70,7 +73,10 @@ def play(players):
     playerIndex = 0
 
     updateBarChart(players)
-    plt.show(block=False)
+    #plt.figure(figsize=(100, 100))
+
+    #plt.style.use("fivethirtyeight")
+    #plt.show()
 
     while True:
 
@@ -115,5 +121,7 @@ def play(players):
             playerIndex = 0
 
         #graph
-        updateBarChart(players)
+        for i in range(10):
+            updateBarChart(players)
+        print(currentPlayer.stats)
 
