@@ -57,15 +57,20 @@ def getRandomQuestionSet():
 def updateBarChart(players):
     plt.cla()
     for player in players:
+        # changes = []
+        # for stat in player.stats:
         plt.subplot(1, len(players), players.index(player) + 1)
-        player.updateBarChart()
-        plt.draw()
+
+        for i in range(len(players)):
+            player.updateBarChart()
+
+    plt.draw()
 
     plt.ion()
     plt.pause(0.01)
 
 def play(players):
-    #matplotlib.use("TkAgg")
+    # matplotlib.use("TkAgg")
 
     questionSet = prevQuestionSet = {"question": None}
     needsToRepeatQuestion = False

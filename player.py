@@ -35,10 +35,9 @@ class Player:
             self.isDead = True
 
     def updateBarChart(self):
+
         for stat in self.stats:
-            plt.bar([stat],
-                [self.stats[stat]],
-                color=self.color)
+            plt.bar(self.stats.keys(), self.stats.values(), color=self.color)
 
         #for bar in bars:
 
