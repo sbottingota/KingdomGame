@@ -77,6 +77,11 @@ def play(players):
         # current player
         currentPlayer = players[playerIndex]
 
+        # check if the player is alive
+        if currentPlayer.isDead:
+            playerIndex += 1
+            continue
+
         # preventing duplicates
         if not needsToRepeatQuestion:
             while questionSet["question"] == prevQuestionSet["question"]:
