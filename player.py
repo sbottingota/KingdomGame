@@ -6,7 +6,6 @@ class Player:
         self.color = color
 
         self.isDead = False
-        self.hasWon = False
 
         self.stats = {
             "money": 50,
@@ -14,14 +13,6 @@ class Player:
             "population": 50,
             "happiness": 50
         }
-
-
-
-        #self.bars = plt.bar(["money", "resources", "population", "happiness"], [50, 50, 50, 50])
-
-        #self.barChart =
-        #self.barChart.show()
-        #plt.show()
 
     # adds to a stat. addValue can be negative. stat is a string ("money"/"resources"/"population"/"happiness").
     def addToStat(self, addValue, stat):
@@ -33,12 +24,3 @@ class Player:
         elif self.stats[stat] <=0:
             self.stats[stat] = 0
             self.isDead = True
-
-    def updateBarChart(self):
-
-        for stat in self.stats:
-            plt.bar(self.stats.keys(), self.stats.values(), color=self.color)
-
-        #for bar in bars:
-
-        #    print(bar.get_height())

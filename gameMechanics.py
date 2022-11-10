@@ -29,7 +29,9 @@ def parseAnswerConsequences(actions, currentPlayer, players):
         print("next player")
         return True
 
+    print(actions.keys())
     for stat in actions:
+        print(stat)
         # take from each player
         if actions[stat][0] == "p":
             addValue = int(actions[stat][1:])
@@ -38,15 +40,14 @@ def parseAnswerConsequences(actions, currentPlayer, players):
             currentPlayer.addToStat(len(players) * addValue, stat)
 
             for player in players:
-                if players.index(player) != -1:
+                if currentPlayer != player and player.isDead == False:
                     player.addToStat(-addValue, stat)
 
 
         # add or subtract
         else:
             currentPlayer.addToStat(int(actions[stat]), stat)
-            print("add", actions[stat])
-
+            print("add", actions[stat], "to/from", stat)
     return False
 
 
@@ -54,37 +55,25 @@ def getRandomQuestionSet():
     with open("questions.json", "r") as questions:
         return random.choice(json.load(questions))
 
-def updateBarChart(players):
-    plt.cla()
+def updateBarChart(players, fig):
     for player in players:
-        # changes = []
-        # for stat in player.stats:
-        plt.subplot(1, len(players), players.index(player) + 1)
+        plt.subplot(len(players), 1, players.index(player) + 1)
+        plt.cla()
+        plt.barh(tuple(player.stats.keys()), player.stats.values(), color=player.color)
 
-        for i in range(len(players)):
-            player.updateBarChart()
-
-    plt.draw()
-
-    plt.ion()
     plt.pause(0.01)
 
 def play(players):
-    # matplotlib.use("TkAgg")
-
     questionSet = prevQuestionSet = {"question": None}
     needsToRepeatQuestion = False
 
     playerIndex = 0
 
-    updateBarChart(players)
-    #plt.figure(figsize=(100, 100))
-
-    #plt.style.use("fivethirtyeight")
-    #plt.show()
+    plt.ion()
+    fig = plt.figure()
+    updateBarChart(players, fig)
 
     while True:
-
         # current player
         currentPlayer = players[playerIndex]
 
@@ -125,8 +114,6 @@ def play(players):
         if playerIndex == len(players):
             playerIndex = 0
 
-        #graph
-        for i in range(10):
-            updateBarChart(players)
-        print(currentPlayer.stats)
-
+        # this works better when you run it twice. idk why though.
+        for i in range(2):
+            updateBarChart(players, fig)
