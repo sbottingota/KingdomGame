@@ -1,7 +1,7 @@
 import random
 import json
-import matplotlib
 import matplotlib.pyplot as plt
+
 
 def getBinaryInput():
     binaryInput = input("y(es) or n(o): ")
@@ -31,11 +31,9 @@ def parseAnswerConsequences(actions, currentPlayer, players):
 
     print(actions.keys())
     for stat in actions:
-        print(stat)
         # take from each player
         if actions[stat][0] == "p":
             addValue = int(actions[stat][1:])
-            print("take", addValue)
 
             currentPlayer.addToStat(len(players) * addValue, stat)
 
@@ -47,7 +45,6 @@ def parseAnswerConsequences(actions, currentPlayer, players):
         # add or subtract
         else:
             currentPlayer.addToStat(int(actions[stat]), stat)
-            print("add", actions[stat], "to/from", stat)
 
     for player in players:
         if player.isDead:
@@ -76,12 +73,18 @@ def play(players):
 
     playerIndex = 0
 
+    COLOR_CODES = ["\u001b[31m", "\u001b[32m", "\u001b[34m", "\u001b[35m"]
+    RESET = "\u001b[0m"
+
     plt.ion()
     updateBarChart(players)
 
     while True:
         # current player
         currentPlayer = players[playerIndex]
+
+        #player color
+        print(COLOR_CODES[playerIndex])
 
         # check if the player is alive
         if currentPlayer.isDead:
@@ -130,3 +133,5 @@ def play(players):
         # this works better when you run it twice. idk why though.
         for i in range(2):
             updateBarChart(players)
+
+        print(RESET)

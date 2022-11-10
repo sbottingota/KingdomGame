@@ -99,5 +99,17 @@
         "no": {
             "happiness": "-5"
         }
+    },
+
+    {
+        "question": "An environmentalist thinks you should replant trees. ",
+        "yes": {
+            "money": "-5",
+            "resources": "+10"
+        },
+
+        "no": {
+            "resources": "-5"
+        }
     }
 ]

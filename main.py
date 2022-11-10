@@ -30,14 +30,14 @@ def getInt(message, min, max):
 
 nOfPlayers = getInt("How many players will there be? ", 2, 4)
 
-ordinalNums = ["1st", "2nd", "3rd", "4th", "5th"]
-colors = ["red", "green", "blue", "yellow", "purple"]
+ORDINAL_NUMS = ["1st", "2nd", "3rd", "4th"]
+COLORS = ["red", "green", "blue", "purple"]
 
 players = []
 
 for i in range(nOfPlayers):
-    name = input("What is the " + ordinalNums[i] + " player's name? ")
-    players.append(Player(name, colors[i]))
+    name = input("What is the " + ORDINAL_NUMS[i] + " player's name? ")
+    players.append(Player(name, COLORS[i]))
 
 
 gameMechanics.play(players)
