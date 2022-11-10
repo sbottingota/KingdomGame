@@ -48,6 +48,10 @@ def parseAnswerConsequences(actions, currentPlayer, players):
         else:
             currentPlayer.addToStat(int(actions[stat]), stat)
             print("add", actions[stat], "to/from", stat)
+
+    for player in players:
+        if player.isDead:
+            print(player.name, "has died :(")
     return False
 
 
@@ -55,10 +59,13 @@ def getRandomQuestionSet():
     with open("questions.json", "r") as questions:
         return random.choice(json.load(questions))
 
-def updateBarChart(players, fig):
+def updateBarChart(players):
+    nRows = 2 if len(players) > 3 else 1
+
     for player in players:
-        plt.subplot(len(players), 1, players.index(player) + 1)
+        plt.subplot(round(len(players) / nRows), nRows, players.index(player) + 1)
         plt.cla()
+        #plt.title(player.name)
         plt.barh(tuple(player.stats.keys()), player.stats.values(), color=player.color)
 
     plt.pause(0.01)
@@ -70,8 +77,7 @@ def play(players):
     playerIndex = 0
 
     plt.ion()
-    fig = plt.figure()
-    updateBarChart(players, fig)
+    updateBarChart(players)
 
     while True:
         # current player
@@ -87,11 +93,13 @@ def play(players):
             while questionSet["question"] == prevQuestionSet["question"]:
                 questionSet = getRandomQuestionSet()
 
-        input("Press enter to continue")  # wait for user to press enter
+        input("Press enter to continue, " + currentPlayer.name)  # wait for user to press enter
 
         print(questionSet["question"])
 
         answerIsYes = getBinaryInput()
+
+        # TODO: find a more concise way of doing this
         if answerIsYes:
             if not needsToRepeatQuestion:
                 needsToRepeatQuestion = parseAnswerConsequences(questionSet["yes"], currentPlayer, players)
@@ -121,4 +129,4 @@ def play(players):
 
         # this works better when you run it twice. idk why though.
         for i in range(2):
-            updateBarChart(players, fig)
+            updateBarChart(players)
