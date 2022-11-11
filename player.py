@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 class Player:
     def __init__(self, name, color):
         self.name = name
