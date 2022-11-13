@@ -59,6 +59,7 @@ def updateBarChart(players):
         plt.subplot(round(len(players) / nRows), nRows, players.index(player) + 1)
         plt.cla()
         plt.barh(tuple(player.stats.keys()), player.stats.values(), color=player.color)
+        plt.xlim(0, 100)
 
     plt.pause(0.01)
 
