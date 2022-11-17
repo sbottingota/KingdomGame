@@ -22,8 +22,8 @@ def getInt(message, min, max):
 
     output = int(output)
     while output > max or output < min:
-        output = getInt("Number is out of bounds, please put a number between",
-                        + min + " and " + max + ": ", min, max)
+        output = getInt("Number is out of bounds, please put a number between "
+                        + str(min) + " and " + str(max) + ": ", min, max)
 
     return output
 
