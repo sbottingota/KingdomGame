@@ -100,16 +100,21 @@
             "happiness": "-5"
         }
     },
-
     {
         "question": "An environmentalist thinks you should replant trees. ",
         "yes": {
             "money": "-5",
             "resources": "+10"
         },
-
         "no": {
             "resources": "-5"
+        }
+    },
+    {
+        "question": "A veteran thinks you should go to war with a weak and pathetic nation",
+        "yes": "w",
+        "no": {
+            "happiness": "-5"
         }
     }
 ]

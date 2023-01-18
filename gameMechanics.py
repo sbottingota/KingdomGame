@@ -1,33 +1,19 @@
 import random
 import json
+
 import matplotlib.pyplot as plt
 
-
-def getBinaryInput():
-    binaryInput = input("y(es) or n(o): ")
-
-    inputIsInvalid = True
-
-    while inputIsInvalid:
-        if binaryInput == "y":
-            output = True
-            inputIsInvalid = False
-
-        elif binaryInput == "n":
-            output = False
-            inputIsInvalid = False
-
-        else:
-            binaryInput = input("Invalid input, please try again: ")
-
-    return output
+import utils
 
 
 # returns if the question needs to be presented to the next person
 def parseAnswerConsequences(actions, currentPlayer, players):
     if actions == "n":
-        print("that is the question")
         return True
+
+    elif actions == "w":
+        wageWar(currentPlayer, random.choice(players))
+        return False
 
     for stat in actions:
         # take from each player
@@ -48,9 +34,29 @@ def parseAnswerConsequences(actions, currentPlayer, players):
     return False
 
 
+def wageWar(side1, side2):
+    for side in (side1, side2):
+        print(side.colorCode)
+        armyPopulation = utils.getInt(side.name +
+                ", how many people would you like to subscript to the army? (Max 50% of you population)",
+                                      1, side.stats["population"] // 2)
+
+        armyFunding = utils.getInt(side.name +
+                                   ", how much funding (money & resources) would you like to give the army?"
+                                   " (Max 50% of the lowest stat out of the two)",
+                                   1, min(side.stats["money"], side.stats["resources"]) // 2)
+        parseAnswerConsequences({
+            "money": str(-armyFunding),
+            "resources": str(-armyFunding),
+            "population": str(-armyPopulation)
+        }, side, (side1, side2))
+
+
+
 def getRandomQuestionSet():
     with open("questions.json", "r") as questions:
         return random.choice(json.load(questions))
+
 
 def updateBarChart(players):
     nRows = 2 if len(players) > 3 else 1
@@ -63,24 +69,25 @@ def updateBarChart(players):
 
     plt.pause(0.01)
 
+
 def play(players):
     questionSet = prevQuestionSet = {"question": None}
     needsToRepeatQuestion = False
 
     playerIndex = 0
 
-    COLOR_CODES = ["\u001b[31m", "\u001b[32m", "\u001b[34m", "\u001b[35m"]
-    RESET = "\u001b[0m"
-
-    plt.ion()
     updateBarChart(players)
 
+    plt.ion()
+
     while True:
+        plt.cla()
+
         # current player
         currentPlayer = players[playerIndex]
 
         # player color
-        print(COLOR_CODES[playerIndex])
+        print(currentPlayer.colorCode)
 
         # check if the player is alive
         if currentPlayer.isDead:
@@ -105,8 +112,6 @@ def play(players):
 
         # TODO: add ties.
 
-
-
         # preventing duplicates
         if not needsToRepeatQuestion:
             while questionSet["question"] == prevQuestionSet["question"]:
@@ -116,30 +121,26 @@ def play(players):
 
         print(questionSet["question"])
 
-        answerIsYes = getBinaryInput()
+        answerIsYes = utils.getBinaryInput()
 
         # TODO: find a more concise way of doing this
         if answerIsYes:
             if not needsToRepeatQuestion:
                 needsToRepeatQuestion = parseAnswerConsequences(questionSet["yes"], currentPlayer, players)
-                print("yes, no repeat")
             else:
                 needsToRepeatQuestion = False
                 parseAnswerConsequences(questionSet["yes"], currentPlayer, players)
-                print("yes, repeat")
 
             print("\n", questionSet["yes"])
 
         else:
             if not needsToRepeatQuestion:
                 needsToRepeatQuestion = parseAnswerConsequences(questionSet["no"], currentPlayer, players)
-                print("no, no repeat")
 
             else:
                 needsToRepeatQuestion = False
                 parseAnswerConsequences(questionSet["no"], currentPlayer, players)
             parseAnswerConsequences(questionSet["no"], currentPlayer, players)
-            print("no, repeat")
 
             print("\n", questionSet["no"])
 
@@ -152,7 +153,8 @@ def play(players):
             playerIndex = 0
 
         # this works better when you run it multiple times. idk why though.
+        # TODO: find how to make this work while running it only once.
         for i in range(3):
             updateBarChart(players)
 
-        print(RESET)
+        print(utils.RESET)

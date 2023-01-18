@@ -1,7 +1,8 @@
 class Player:
-    def __init__(self, name, color):
+    def __init__(self, name, color, colorCode):
         self.name = name
         self.color = color
+        self.colorCode = colorCode
 
         self.isDead = False
 
@@ -10,6 +11,11 @@ class Player:
             "resources": 50,
             "population": 50,
             "happiness": 50
+        }
+
+        self.army = {
+            "population": 0,
+            "funding": 0
         }
 
     # adds to a stat. addValue can be negative. stat is a string ("money"/"resources"/"population"/"happiness").
