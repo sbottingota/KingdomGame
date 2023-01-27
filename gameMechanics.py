@@ -7,6 +7,12 @@ import utils
 
 
 # returns if the question needs to be presented to the next person
+# key:
+# n: ask same question to next person
+# p: take stat from the other people
+# %: different outcomes based on weights
+# number: just add that number to the stat
+
 def parseAnswerConsequences(actions, currentPlayer, players):
     if actions == "n":
         return True
@@ -22,6 +28,15 @@ def parseAnswerConsequences(actions, currentPlayer, players):
                 if currentPlayer != player and player.isDead == False:
                     player.addToStat(-addValue, stat)
 
+        elif actions[stat][0] == "%":
+            splitActions = actions[stat][1:].split(",")
+            weights = [int(splitActions[i].split(":")[0]) for i in range(len(splitActions))]
+            possibleActions = [int(splitActions[i].split(":")[1]) for i in range(len(splitActions))]
+
+            outcome = random.choices(possibleActions, weights=weights)[0] # [0] because random.choices returns a list of choices
+            print(splitActions, weights, possibleActions, outcome)
+
+            currentPlayer.addToStat(outcome, stat)
 
         # add or subtract
         else:
