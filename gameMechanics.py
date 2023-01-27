@@ -11,10 +11,6 @@ def parseAnswerConsequences(actions, currentPlayer, players):
     if actions == "n":
         return True
 
-    elif actions == "w":
-        wageWar(currentPlayer, random.choice(players))
-        return False
-
     for stat in actions:
         # take from each player
         if actions[stat][0] == "p":
@@ -32,25 +28,6 @@ def parseAnswerConsequences(actions, currentPlayer, players):
             currentPlayer.addToStat(int(actions[stat]), stat)
 
     return False
-
-
-def wageWar(side1, side2):
-    for side in (side1, side2):
-        print(side.colorCode)
-        armyPopulation = utils.getInt(side.name +
-                ", how many people would you like to subscript to the army? (Max 50% of you population)",
-                                      1, side.stats["population"] // 2)
-
-        armyFunding = utils.getInt(side.name +
-                                   ", how much funding (money & resources) would you like to give the army?"
-                                   " (Max 50% of the lowest stat out of the two)",
-                                   1, min(side.stats["money"], side.stats["resources"]) // 2)
-        parseAnswerConsequences({
-            "money": str(-armyFunding),
-            "resources": str(-armyFunding),
-            "population": str(-armyPopulation)
-        }, side, (side1, side2))
-
 
 
 def getRandomQuestionSet():
@@ -131,7 +108,6 @@ def play(players):
                 needsToRepeatQuestion = False
                 parseAnswerConsequences(questionSet["yes"], currentPlayer, players)
 
-            print("\n", questionSet["yes"])
 
         else:
             if not needsToRepeatQuestion:
@@ -142,7 +118,6 @@ def play(players):
                 parseAnswerConsequences(questionSet["no"], currentPlayer, players)
             parseAnswerConsequences(questionSet["no"], currentPlayer, players)
 
-            print("\n", questionSet["no"])
 
         print("\n" * 3)  # whitespace
 

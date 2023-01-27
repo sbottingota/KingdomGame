@@ -14,8 +14,10 @@ class Player:
         }
 
         self.army = {
+            "money": 0,
+            "resources": 0,
             "population": 0,
-            "funding": 0
+            "happiness": 0
         }
 
     # adds to a stat. addValue can be negative. stat is a string ("money"/"resources"/"population"/"happiness").

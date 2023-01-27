@@ -109,12 +109,5 @@
         "no": {
             "resources": "-5"
         }
-    },
-    {
-        "question": "A veteran thinks you should go to war with a weak and pathetic nation",
-        "yes": "w",
-        "no": {
-            "happiness": "-5"
-        }
     }
 ]
