@@ -48,7 +48,7 @@
     {
         "question": "A CEO asks you to invest in his company.",
         "yes": {
-            "money": "%2:+15,1:-15"
+            "money": "%2:1,+15:-15"
         },
         "no": {
             "happiness": "-5"

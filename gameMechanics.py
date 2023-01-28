@@ -13,34 +13,35 @@ import utils
 # %: different outcomes based on weights
 # number: just add that number to the stat
 
-def parseAnswerConsequences(actions, currentPlayer, players):
-    if actions == "n":
+def parseAnswerConsequences(consequences, currentPlayer, players):
+    if consequences == "n":
         return True
 
-    for stat in actions:
+    for stat in consequences:
         # take from each player
-        if actions[stat][0] == "p":
-            addValue = int(actions[stat][1:])
+        if consequences[stat][0] == "p":
+            action = int(consequences[stat][1:])
 
-            currentPlayer.addToStat(len(players) * addValue, stat)
+            currentPlayer.addToStat(len(players) * action, stat)
 
             for player in players:
                 if currentPlayer != player and player.isDead == False:
-                    player.addToStat(-addValue, stat)
+                    player.addToStat(-action, stat)
 
-        elif actions[stat][0] == "%":
-            splitActions = actions[stat][1:].split(",")
-            weights = [int(splitActions[i].split(":")[0]) for i in range(len(splitActions))]
-            possibleActions = [int(splitActions[i].split(":")[1]) for i in range(len(splitActions))]
+        elif consequences[stat][0] == "%":
+            weights = consequences[stat][1:].split(",")[0].split(":")
+            weights = [int(weights[i]) for i in range(len(weights))]
 
-            outcome = random.choices(possibleActions, weights=weights)[0] # [0] because random.choices returns a list of choices
-            print(splitActions, weights, possibleActions, outcome)
+            actions = consequences[stat][1:].split(",")[1].split(":")
+            actions = [int(actions[i]) for i in range(len(actions))]
 
-            currentPlayer.addToStat(outcome, stat)
+            action = random.choices(actions, weights=weights)[0] # [0] because random.choices returns a list of choices
+
+            currentPlayer.addToStat(action, stat)
 
         # add or subtract
         else:
-            currentPlayer.addToStat(int(actions[stat]), stat)
+            currentPlayer.addToStat(int(consequences[stat]), stat)
 
     return False
 
