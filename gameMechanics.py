@@ -67,7 +67,8 @@ def play(players):
     questionSet = prevQuestionSet = {"question": None}
     needsToRepeatQuestion = False
 
-    playerIndex = 0
+    roundIndex = 0
+
 
     updateBarChart(players)
 
@@ -77,7 +78,7 @@ def play(players):
         plt.cla()
 
         # current player
-        currentPlayer = players[playerIndex]
+        currentPlayer = players[roundIndex % len(players)]
 
         # player color
         print(currentPlayer.colorCode)
@@ -85,7 +86,6 @@ def play(players):
         # check if the player is alive
         if currentPlayer.isDead:
             print(currentPlayer.name, "is dead and can't play :(")
-            playerIndex += 1
             continue
 
 
@@ -139,13 +139,19 @@ def play(players):
 
         prevQuestionSet = questionSet  # previous question set, to avoid duplicates
 
-        playerIndex += 1
-        if playerIndex == len(players):
-            playerIndex = 0
 
         # this works better when you run it multiple times. idk why though.
         # TODO: find how to make this work while running it only once.
         for i in range(3):
             updateBarChart(players)
 
-        print(utils.RESET)
+
+        if currentPlayer.isDead:
+            print(currentPlayer.name, "is dead and can't play :(")
+            continue
+
+
+        roundIndex += 1
+        if roundIndex > 10 * len(players):
+            print(utils.RESET + "Game has gone on for too long. All surviving players draw.")
+            break
