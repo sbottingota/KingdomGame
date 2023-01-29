@@ -79,6 +79,7 @@ def play(players):
 
         # current player
         currentPlayer = players[roundIndex % len(players)]
+        roundIndex += 1
 
         # player color
         print(currentPlayer.colorCode)
@@ -147,11 +148,10 @@ def play(players):
 
 
         if currentPlayer.isDead:
-            print(currentPlayer.name, "is dead and can't play :(")
+            print(currentPlayer.name, "has died and can't play :(")
             continue
 
 
-        roundIndex += 1
         if roundIndex > 10 * len(players):
             print(utils.RESET + "Game has gone on for too long. All surviving players draw.")
             break
