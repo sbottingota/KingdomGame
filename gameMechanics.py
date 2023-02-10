@@ -3,19 +3,22 @@ import json
 
 import matplotlib.pyplot as plt
 
-import utils
-
+from utils import *
 
 # returns if the question needs to be presented to the next person
 # key:
-# n: ask same question to next person
+# n: ask same question to next person (currently not supported)
 # p: take stat from the other people
-# %: different outcomes based on weights
+# %: different outcomes based on weights. (e.g. for 2 weights: {weight1}:{weight2},{outcome1}:{outcome2}
+# >: have outcomes later as well as now. (e.g.: {# of turns for future action}:{current action},{future action})
 # number: just add that number to the stat
 
 def parseAnswerConsequences(consequences, currentPlayer, players):
+
     if consequences == "n":
-        return True
+        return None
+
+    futureAction = {}
 
     for stat in consequences:
         # take from each player
@@ -39,11 +42,19 @@ def parseAnswerConsequences(consequences, currentPlayer, players):
 
             currentPlayer.addToStat(action, stat)
 
+        elif consequences[stat][0] == ">":
+            print(consequences[stat][1:].split("|")[0].split(":"))
+            nMoves, currentAction = consequences[stat][1:].split("|")[0].split(":")
+
+            futureAction[stat] = (nMoves, consequences[stat][1:].split("|")[1])
+
+            currentPlayer.addToStat(int(currentAction), stat)
+
         # add or subtract
         else:
             currentPlayer.addToStat(int(consequences[stat]), stat)
 
-    return False
+    return None if futureAction == {} else futureAction
 
 
 def getRandomQuestionSet():
@@ -62,10 +73,25 @@ def updateBarChart(players):
 
     plt.pause(0.01)
 
+def playerHasWon(currentPlayer, players):
+    currentPlayerHasWon = True
+
+    for player in players:
+        if player == currentPlayer:
+            continue
+
+        elif not player.isDead:
+            currentPlayerHasWon = False
+            return False
+
+    return True
+
 
 def play(players):
-    questionSet = prevQuestionSet = {"question": None}
-    needsToRepeatQuestion = False
+    questionSet = prevQuestionSet = None
+    #needsToRepeatQuestion = False
+
+    futureActions = dict()
 
     roundIndex = 0
 
@@ -89,54 +115,46 @@ def play(players):
             print(currentPlayer.name, "is dead and can't play :(")
             continue
 
-
         else:
-            currentPlayerHasWon = True
-            for player in players:
-                if player == currentPlayer:
-                    continue
-
-                elif not player.isDead:
-                    currentPlayerHasWon = False
-                    break
-
-            if currentPlayerHasWon:
+            if playerHasWon(currentPlayer, players):
                 print(currentPlayer.name, "has won :)")
                 break
 
         # TODO: add ties.
 
+        # actions from previous rounds
+        if roundIndex in futureActions:
+            print("From a few moves ago:")
+            parseAnswerConsequences(futureActions[roundIndex], currentPlayer, players)
+            del futureActions[roundIndex]
+
+            print("\n")
+
+
         # preventing duplicates
-        if not needsToRepeatQuestion:
-            while questionSet["question"] == prevQuestionSet["question"]:
-                questionSet = getRandomQuestionSet()
+        questionSet = getRandomQuestionSet()
+        while questionSet == prevQuestionSet:
+            questionSet = getRandomQuestionSet()
 
         input("Press enter to continue, " + currentPlayer.name)  # wait for user to press enter
 
         print(questionSet["question"])
 
-        answerIsYes = utils.getBinaryInput()
+        answerIsYes = getBinaryInput()
 
-        # TODO: find a more concise way of doing this
-        if answerIsYes:
-            if not needsToRepeatQuestion:
-                needsToRepeatQuestion = parseAnswerConsequences(questionSet["yes"], currentPlayer, players)
-            else:
-                needsToRepeatQuestion = False
-                parseAnswerConsequences(questionSet["yes"], currentPlayer, players)
+        consequences = questionSet["yes" if answerIsYes else "no"]
+        futureAction = parseAnswerConsequences(consequences, currentPlayer, players)
 
+        if futureAction is not None:
+            for stat, action in futureAction.items():
+                if not action[0] in futureActions:
+                    executeRoundIndex = int(action[0]) * len(players) + roundIndex
 
-        else:
-            if not needsToRepeatQuestion:
-                needsToRepeatQuestion = parseAnswerConsequences(questionSet["no"], currentPlayer, players)
-
-            else:
-                needsToRepeatQuestion = False
-                parseAnswerConsequences(questionSet["no"], currentPlayer, players)
-            parseAnswerConsequences(questionSet["no"], currentPlayer, players)
+                    futureActions[executeRoundIndex] = {}
+                    futureActions[executeRoundIndex][stat] = action[1]
 
 
-        print("\n" * 3)  # whitespace
+        print("\n" * 2)  # whitespace
 
         prevQuestionSet = questionSet  # previous question set, to avoid duplicates
 
@@ -153,5 +171,5 @@ def play(players):
 
 
         if roundIndex > 10 * len(players):
-            print(utils.RESET + "Game has gone on for too long. All surviving players draw.")
+            print(RESET + "Game has gone on for too long. All surviving players draw.")
             break

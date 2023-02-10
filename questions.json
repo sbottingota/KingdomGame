@@ -46,9 +46,9 @@
     },
 
     {
-        "question": "A CEO asks you to invest in his company.",
+        "question": "A CEO asks you to invest 15 money in the company with a potential profit of up to 100%. ",
         "yes": {
-            "money": "%2:1,+15:-15"
+            "money": ">2:-15|%2:1:1,+30:+20:0"
         },
         "no": {
             "happiness": "-5"
@@ -98,6 +98,15 @@
         },
         "no": {
             "resources": "-5"
+        }
+    },
+    {
+        "question": "A gambler bets you 10 money on the outcome of a die. ",
+        "yes": {
+            "money": "%1:1,+10:-10"
+        },
+        "no": {
+            "happiness": "-5"
         }
     }
 ]

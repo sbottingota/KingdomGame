@@ -34,12 +34,21 @@ def checkIfIsInt(checkValue):
 def getInt(message, min, max):
     output = input(message)
 
-    while checkIfIsInt(output) == False:
+    if checkIfIsInt(output) == False:
         output = getInt("Not a number, please try again: ", min, max)
 
     output = int(output)
-    while output > max or output < min:
+    if output > max or output < min:
         output = getInt("Number is out of bounds, please put a number between "
                         + str(min) + " and " + str(max) + ": ", min, max)
+
+    return output
+
+def getNotEmptyString(message):
+    output = input(message)
+    #output = output.strip()
+
+    if output.strip() == "":
+        output = getNotEmptyString("String can't be just whitespace. Please input a string with more than whitespace. ")
 
     return output

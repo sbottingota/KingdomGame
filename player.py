@@ -13,15 +13,14 @@ class Player:
             "happiness": 50
         }
 
-        self.army = {
-            "money": 0,
-            "resources": 0,
-            "population": 0,
-            "happiness": 0
-        }
-
     # adds to a stat. addValue can be negative. stat is a string ("money"/"resources"/"population"/"happiness").
     def addToStat(self, addValue, stat):
+        if str(addValue)[0] != "-":
+            print(stat, " +", addValue, " to ", self.name, sep="")
+
+        else:
+            print(stat, addValue, "from", self.name)
+
         self.stats[stat] += addValue
         if self.stats[stat] > 100:
             self.stats[stat] = 100
