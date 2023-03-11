@@ -2,9 +2,6 @@ import random
 import json
 
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
-import tkinter as tk
 
 from utils import *
 
@@ -65,16 +62,16 @@ def getRandomQuestionSet():
         return random.choice(json.load(questions))
 
 
-def updateBarChart(fig: plt.Figure, players):
+def updateBarChart(players):
     nRows = 2 if len(players) > 3 else 1
 
-    axes = fig.subplots(round(len(players) / nRows), nRows)
+    for player in players:
+        plt.subplot(round(len(players) / nRows), nRows, players.index(player) + 1)
+        plt.cla()
+        plt.barh(tuple(player.stats.keys()), player.stats.values(), color=player.color)
+        plt.xlim(0, 100)
 
-    for i in range(len(players)):
-        axes[i].cla()
-        axes[i].barh(tuple(players[i].stats.keys()), players[i].stats.values(), color=players[i].color)
-        axes[i].set_xlim((0, 100))
-        #plt.pause(0.01)
+    plt.pause(0.01)
 
 def playerHasWon(currentPlayer, players):
     currentPlayerHasWon = True
@@ -98,21 +95,13 @@ def play(players):
 
     roundIndex = 0
 
-    fig = plt.Figure()
 
-    root = tk.Tk()
-    canvas = FigureCanvasTkAgg(fig, root)
-    canvas.get_tk_widget().pack()
-    updateBarChart(fig, players)
-    canvas.draw()
+    updateBarChart(players)
 
-    frame = tk.Frame(root)
-    frame.pack(side="top")
-
-
+    plt.ion()
 
     while True:
-        root.update()
+        plt.cla()
 
         # current player
         currentPlayer = players[roundIndex % len(players)]
@@ -173,9 +162,7 @@ def play(players):
         # this works better when you run it multiple times. idk why though.
         # TODO: find how to make this work while running it only once.
         for i in range(3):
-            updateBarChart(fig, players)
-
-        canvas.draw()
+            updateBarChart(players)
 
 
         if currentPlayer.isDead:
